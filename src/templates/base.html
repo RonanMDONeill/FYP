@@ -1,0 +1,26 @@
+<!doctype html>
+{% load static %}
+<html>
+  <title>
+    {% block content_title %}
+      PaperMill
+    {% endblock %}
+  </title>
+  <head>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.ico' %}"/>
+    {% block content_head %}
+    <style>
+      	body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Corbel;
+      }
+    </style>
+    {% endblock %}
+  </head>
+  <body style="background-color:#15202b;">
+    {% include 'navbar.html' %}
+  	{% block content_body %}
+  	{% endblock %}
+  </body>
+</html>

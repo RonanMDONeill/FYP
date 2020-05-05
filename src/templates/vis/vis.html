@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        Visualization
+    {% endblock %}
+    {% block content_head %}
+        <style>
+            body, html {
+                height: 100%;
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #viz {
+                height: 100%;
+                font: 1pt arial;
+            }
+
+            .tf {
+                position: relative;
+                top: -50px;
+                left: 30%;
+                width: 600px;
+                padding: 8px;
+            }
+
+            .button {
+                position: relative;
+                top: -50px;
+                left: 30%;
+                padding: 8px;
+            }
+
+            li {
+                color: black !important;
+            }
+
+            #vis {
+              min-height: 750px !important;
+              border: 1px solid lightgray;
+              background-color: #bababa;
+              border-color: black;
+              border-width: 5px;
+            }
+
+            canvas {
+              min-height: 850px !important;
+            }
+
+            #vis-type {
+              width: 100%;
+            }
+
+            #legend {
+              border: 1px solid lightgray;
+              background-color: #bababa;
+              border-color: black;
+              border-width: 5px;
+            }
+
+            #recs {
+              border: 1px solid lightgray;
+              background-color: #bababa;
+              border-color: black;
+              border-width: 5px;
+              color: black;
+            }
+
+            #see-more {
+              border: 1px solid lightgray;
+              background-color: #bababa;
+              border-color: black;
+              border-width: 5px;
+            }
+
+            #type-legend {
+              text-align: center;
+            }
+
+            #type-legend a:link {
+              color: black;
+            }
+
+            #type-legend a:visited {
+              color: black;
+            }
+
+            h1 {
+              color: white;
+            }
+        </style>   
+    {% endblock %}
+    <body>
+    {% block content_body %}
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-2" id="type-legend">
+          <br><select class="form-control" id="vis-type" onchange="updateGraph(this.value)">
+            <option value="PA">Publication & Author</option>
+            <option value="P">Publication</option>
+            <option value="A">Co-Authors</option>
+            <option value="C">References</option>
+          </select><br>
+          <div id="see-more" class="container">
+            <h3><b id="node-type"></b></h3>
+            <h3 id="node-title"></h3>
+            <h4><a href=""  id="see-more-link"></a></h4>
+          </div><br>
+          {% if recPaper_list %}
+          <div id="recs" class="container">
+            <h3><b>You may be intereseted in the following papers(s):</b></h3>
+            {% for paper in recPaper_list %}
+            <h4><a href="/search/node/?t=Publication&id={{ paper.paperID }}">{{ paper.paper }}</a></h4>
+            {% endfor %}
+          </div><br>
+          {% endif %}
+          {% if recAuthor_list %}
+          <div id="recs" class="container">
+            <h3><b>You may be intereseted in the following author(s):</b></h3>
+            {% for auth in recAuthor_list %}
+            <h4><a href="/search/nodes/?q={{auth.authorID}}&pp=authorIDs&t=Publication">{{ auth.authorName }}</a></h4>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-9">
+          <div id="vis"></div>
+        </div>
+        <div class="col-1">
+          <br><h1><b>Legend</b></h1>
+          <div id="legend"><img src="/static/images/legend.png" class="img-fluid" alt="legend"></div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      function drawGraph(nodeList, nodeIDList, nodeColourList, nodeShapeList, fromEdgeList, toEdgeList) {
+
+        var x;
+        var nodes;
+        var edges;
+
+        for (x=0; x < nodeList.length-1; x++){
+          if (x == 0){
+            nodes = new vis.DataSet([{id: nodeIDList[x], label: nodeList[x], shape: nodeShapeList[x], color: nodeColourList[x]}]);
+          }
+          else{
+            nodes.add([{id: nodeIDList[x], label: nodeList[x], shape: nodeShapeList[x], color: nodeColourList[x]}]);
+          }
+        }
+
+        for(x=0; x < fromEdgeList.length-1; x++){
+          if(x==0){
+            edges = new vis.DataSet([{from: fromEdgeList[x], to: toEdgeList[x], arrows: 'to'}]);
+          }
+          else {
+            edges.add([{from: fromEdgeList[x], to: toEdgeList[x], arrows: 'to'}]);
+          }
+        }
+
+        // create a network
+        var container = document.getElementById("vis");
+
+        var data = {
+          nodes: nodes,
+          edges: edges
+        };
+
+        var options = {
+            physics: {
+              enabled: true,
+              repulsion: {
+                centralGravity: 0,
+                springLength: 1000,
+                springConstant: 0.05,
+                nodeDistance: 100,
+                damping: 0.09
+              }
+            }
+          };
+        var network = new vis.Network(container, data, options);
+        network.on( 'click', function(properties) {
+          var ids = properties.nodes;
+          var clickedNodes = nodes.get(ids);
+          nodeInfo(clickedNodes);
+        });
+      }
+
+      window.onload = drawGraph("{{ nodePA_list | escapejs }}".split("*"), "{{ nodePAID_list }}".split("*"), "{{ nodePAColour_list }}".split("*"), "{{ nodePAShape_list }}".split("*"), "{{ fromEdgePA_list | escapejs }}".split("*"), "{{ toEdgePA_list | escapejs }}".split("*"));
+    </script>
+    <script>
+          function updateGraph(value) {
+              document.getElementById("vis").innerHTML = "";
+              var nodeList;
+              var nodeIDList;
+              var nodeColourList;
+              var nodeShapeList;
+              var fromEdgeList;
+              var toEdgeList;
+
+              if (value == "PA") {
+                nodeList = "{{ nodePA_list | escapejs }}".split("*");
+                nodeIDList = "{{ nodePAID_list }}".split("*");
+                nodeColourList = "{{ nodePAColour_list }}".split("*");
+                nodeShapeList = "{{ nodePAShape_list }}".split("*");
+                fromEdgeList = "{{ fromEdgePA_list | escapejs }}".split("*");
+                toEdgeList = "{{ toEdgePA_list | escapejs }}".split("*");
+              }
+
+              else if (value == "P") {
+                nodeList = "{{ nodeP_list | escapejs }}".split("*");
+                nodeIDList = "{{ nodePID_list }}".split("*");
+                nodeColourList = "{{ nodePColour_list }}".split("*");
+                nodeShapeList = "{{ nodePShape_list }}".split("*");
+                fromEdgeList = "{{ fromEdgeP_list | escapejs }}".split("*");
+                toEdgeList = "{{ toEdgeP_list | escapejs }}".split("*");
+              }
+
+              else if (value == "A") {
+                nodeList = "{{ nodeA_list | escapejs }}".split("*");
+                nodeIDList = "{{ nodeAID_list }}".split("*");
+                nodeColourList = "{{ nodeAColour_list }}".split("*");
+                nodeShapeList = "{{ nodeAShape_list }}".split("*");
+                fromEdgeList = "{{ fromEdgeA_list | escapejs }}".split("*");
+                toEdgeList = "{{ toEdgeA_list | escapejs }}".split("*");
+              }
+
+              else if (value == "C") {
+                nodeList = "{{ nodeC_list | escapejs }}".split("*");
+                nodeIDList = "{{ nodeCID_list }}".split("*");
+                nodeColourList = "{{ nodeCColour_list }}".split("*");
+                nodeShapeList = "{{ nodeCShape_list }}".split("*");
+                fromEdgeList = "{{ fromEdgeC_list | escapejs }}".split("*");
+                toEdgeList = "{{ toEdgeC_list | escapejs }}".split("*");
+              }
+
+              drawGraph(nodeList, nodeIDList, nodeColourList, nodeShapeList, fromEdgeList, toEdgeList)
+          }
+      </script>
+      <script>
+        function nodeInfo(clickedNodes){
+
+          if (clickedNodes.length > 0) {
+            var nodeDetail = clickedNodes[0];
+
+            var shape = nodeDetail["shape"];
+            var nodeID = nodeDetail["id"];
+            var label = nodeDetail["label"];
+
+            var infoString;
+            var redirect;
+            
+            if (shape == "ellipse"){
+              document.getElementById("node-type").innerHTML = "Author";
+              document.getElementById("node-title").innerHTML = label;
+              document.getElementById("see-more-link").innerHTML="See more from this author";
+              redirect = "/search/nodes/?q="+nodeID+"&pp=authorIDs&t=Publication";
+              document.getElementById("see-more-link").href=redirect;
+            }
+            else {
+              document.getElementById("node-type").innerHTML = "Paper";
+              document.getElementById("node-title").innerHTML = label;
+              document.getElementById("see-more-link").innerHTML="View this paper";
+              redirect = "/search/node/?t=Publication&id="+nodeID;
+              document.getElementById("see-more-link").href=redirect;
+            }
+          }
+        }
+      </script>
+  {% endblock %}
+  </body>

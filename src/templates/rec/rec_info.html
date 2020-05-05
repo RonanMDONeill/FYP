@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% load index %}
+    {% block content_title %}
+        Recommendation Information
+    {% endblock %}
+    {% block content_head %}
+    	<style>
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #search-results {
+                margin-top: 0.5%;
+                background-color: #14202b !important;
+            }
+
+            hr.solid {
+                border-top: 2px solid #999;
+            }
+
+            a {
+                color: white !important;
+            }
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+        <div class="container">
+        	<div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                <div class="row">
+                    <div class="col">
+                    	<h2>In the interest of reducing confirmation bias and the risk of filter bubbles, PaperMill provides its users with information on how their recommendations are being generated. PaperMill generates recommendations based on the textual content of the papers included in your collection.</h2><br>
+                        <hr class="solid"><br>
+                        <h2>Below is as list of the prominent words being used to generate recommendations for this collection: </h2><br>
+                    	<h3>
+                    		{% for word in text %}
+                    			{{ word }}{% if word != text|last %},{% endif %}
+                    		{% endfor %}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </body>

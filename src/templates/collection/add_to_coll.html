@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        Collections
+    {% endblock %}
+    {% block content_head %}
+        <style>
+
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            h2 > a {
+                color: white !important;
+                fontsize: 10px;
+            }
+
+            #table-header {
+                background-color: #15202b !important;
+            }
+
+            #search-results {
+                background-color: #15202b !important;
+            }
+
+            hr.solid {
+                border-top: 2px solid #999;
+            }
+
+            #header {
+                border-top: 6px solid #999;
+            }
+
+            #coll-opt {
+                color: white !important;
+            }
+
+            .btn {
+                background-color: #0d131a !important;
+                border-color: #666 !important;
+            }
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+        <div class="container">
+            <div class="p-3 mb-2 bg-dark text-white" id="table-header">
+                <div class="row">
+                    <div class="col-sm"></div>
+                    <div class="col-sm">
+                        <div class="d-flex justify-content-center">
+                            <h1><b>Collections</b></h1>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-lg btn-danger" onclick="goBack()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid" id="header">
+            {% for col in colls %}
+            <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                <div class="row">
+                    <div class="col-sm"></div>
+                    <div class="col-sm">
+                        <div class="d-flex justify-content-center">
+                            <h2>{{ col }}</h2>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="d-flex justify-content-end">
+                            <a href="/collection/{{ col.user.id }}/{{ col.id }}/{{nodeID}}"><i class="fas fa-plus fa-2x" id="coll-opt"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid">
+        {% endfor %}
+        </div>
+        <script>
+            function goBack() {
+                window.history.back()
+            }
+        </script>
+        {% endblock %}
+    </body>

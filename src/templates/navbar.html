@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+	  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	  <style>
+	  	body {
+	  		margin: 0;
+	  		font-family: Corbel;
+	  	}
+
+	  	.navbar-brand{
+	  		color: white;
+	  		font-size: 25px;
+	  	}
+
+	  	li {
+	  		color: white;
+	  	}
+
+	  	nav .navbar-nav li a{
+  			color: white !important;
+  			font-size: 25px;
+  		}
+
+  		nav a:hover{
+  			color: white;
+  		}
+
+  		#searchBox {
+  			width: 250px !important;
+  		}
+
+  		#search-type {
+  			width: 125px !important;
+  		}
+
+  		#prop-type {
+  			width: 125px !important;
+  		}
+
+  		.navbar-nav > li > .dropdown-menu {
+  			background-color: #0d131a;
+  			box-shadow: 0 10px 10px #000000;
+  		}
+
+  		.navbar-nav > li > .dropdown-menu > a:hover {
+  			background-color: #15202b;
+  		}
+
+  		#banner {
+  			background-color: #0d131a !important;
+  		}
+	  </style>
+	</head>
+
+	<body>
+		{% load static %}
+		<nav class="navbar navbar-expand-sm bg-dark" id="banner">
+		    <ul class="navbar-nav mr-auto">
+		    	{% if request.user.is_authenticated %}
+		    	<li class="nav-item dropdown">
+			    	<a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-book fa-clickable" id="faClick"></i> <b>PaperMill</b></a>
+				    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					    <a class="dropdown-item" href="/collection/{{ request.user.id }}">Collections</a>
+					    <a class="dropdown-item" href="/rec/{{ request.user.id }}">Recommendations</a>
+					    <a class="dropdown-item" href="/rec/venue">Venue Recommender</a>
+				    </div>
+			    </li>
+			    {% else %}
+			    <li class="nav-item dropdown">
+			    	<a class="nav-link" href="/accounts/login/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-book fa-clickable" id="faClick"></i> PaperMill</a>
+			    </li>
+			    {% endif %}
+			</ul>
+			<div class="container">
+  				{% if request.user.is_authenticated %}
+  				<div class="d-flex w-100">
+					<form class="container justify-content-center" id="search-form">
+						<div class="form-row">
+							<div class="col">
+								<select class="form-control form-control-sm" id="search-type">
+									<option value="Publication">Publication</option>
+								    <option value="Author">Author</option>
+								    <option value="Venue">Venue</option>
+								    <option value="Publisher">Publisher</option>
+								    <option value="FoS">Field of Study</option>
+								</select>
+							</div>
+							<div class="col">
+								<select class="form-control form-control-sm" id="prop-type">
+									<option value="title">Title</option>
+								    <option value="authorNames">Author</option>
+								    <option value="venueName">Venue</option>
+								    <option value="publisher">Publisher</option>
+								    <option value="fosNames">Field of Study</option>
+								    <option value="year">Year</option>
+								</select>
+							</div>
+							<div class="col">
+								<input class="form-control" type="text" id="searchBox" name="nodes" placeholder="Search query..." onkeypress="enter_query(event)">
+							</div>
+				        </div>
+			    	</form>
+			    </div>
+		    	{% endif%}
+		    </div>
+		    <ul class="navbar-nav ml-auto">
+		    	{% if request.user.is_authenticated %}
+		    	<li class="nav-item dropdown">
+			    	<a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-clickable" id="faClick"></i><b> {{request.user.username}}</b></a>
+				    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+				    </div>
+			    </li>
+			    {% else %}
+			    <li class="nav-item dropdown">
+			    	<a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">You are not logged in</a>
+				    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          				<a class="dropdown-item" href="/accounts/login/" class="nav-link">Login</a>
+					    <a class="dropdown-item" href="/register" class="nav-link">Register</a>
+				    </div>
+			    </li>
+			    {% endif %}
+			</ul>
+		</nav>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script>
+		  	// Function to hide/show the table based on the values of inputs
+		  	function toggleTable() {
+		  		// Hides the table if the values of both input are same
+		  		$('#prop-type').toggle($('#search-type').val() == "Publication");
+		  	}
+
+		  	$(document).ready(function() {
+		  		// Bind the keyup event on both the inputs, call the function on event
+				$('#search-type').on('click', toggleTable).trigger('click');
+			});
+		</script>
+		<script>
+		  	function enter_query(event) {
+		  		if(event.keyCode == 13) {
+		  			event.preventDefault();
+		  			get_results()
+		  		}
+		  	}
+	 	</script>
+		<script>
+	      function get_results(){
+
+	        console.log("get_results");
+
+	        var query = document.getElementById("searchBox");
+
+	        var node_type = document.getElementById("search-type");
+
+	        if (node_type.value == "Publication") {
+	          var prop_type = document.getElementById("prop-type");
+
+
+	          var search = "/search/nodes/?q="+query.value+"&pp="+prop_type.value+"&t="+node_type.value;
+	        }
+
+	        else {
+	          var search = "/search/nodes/?q="+query.value+"&t="+node_type.value;
+	        }
+
+	        window.location = search;
+	      }
+	  </script>
+	</body>
+</html>

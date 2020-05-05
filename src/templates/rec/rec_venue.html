@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% load index %}
+    {% block content_title %}
+        Recommended Venue
+    {% endblock %}
+    {% block content_head %}
+        <style>
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #search-results {
+                margin-top: 10%;
+                background-color: #14202b !important;
+            }
+
+            a {
+                color: white !important;
+            }
+
+            .col {
+                text-align: center;
+            }
+
+            hr.solid {
+                border-top: 2px solid #999;
+            }
+
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+        <div class="container">
+            <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                <div class="row">
+                    <div class="col">
+                        <h3>For the field "<b>{{ fosName }}</b>", PaperMill recommends the venue: </h3>
+                        <h1><b>{{ venueName }}</b></h1>
+                    </div>
+                </div><br>
+                <hr class="solid"><br>
+                <div class="row">
+                    <div class="col">
+                        <a href="/search/nodes/?q={{venueName}}&pp=venueName&t=Publication"><h3>Click here to see more papers published at this venue.</h3></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </body>

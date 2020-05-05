@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% load index %}
+    {% block content_title %}
+        Venue Recommender
+    {% endblock %}
+    {% block content_head %}
+        <style>
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            h1 {
+                text-align: center;
+            }
+
+            #search-div {
+                background-color: #14202b !important;
+                margin-top: 10%;
+            }
+
+            #fosSearch {
+                display: block;
+                margin: 0 auto;
+                width: 50%;
+            }
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+        <div class="container">
+            <div class="p-3 mb-2 bg-dark text-white" id="search-div">
+                <div class="row">
+                    <div class="col">
+                        <h1>To begin, search for a Field of Study by name in the box below.</h1>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <input class="form-control" type="text" id="fosSearch" placeholder="Field of Study..." onkeypress="enter_fos(event)">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+            function enter_fos(event) {
+                if(event.keyCode == 13) {
+                    event.preventDefault();
+                    get_fos_results()
+                }
+            }
+        </script>
+        <script>
+          function get_fos_results(){
+
+            console.log("get_results");
+
+            var query = document.getElementById("fosSearch");
+
+            var search = "/search/venuerec/nodes/?q="+query.value+"&t=FoS";
+
+            window.location = search;
+          }
+      </script>
+    {% endblock %}
+    </body>

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        Recommendations
+    {% endblock %}
+    {% block content_head %}
+        <style>
+
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #table-header {
+                background-color: #15202b !important;
+            }
+
+            #search-results {
+                background-color: #14202b !important;
+            }
+
+            a {
+                color: white !important;
+                fontsize: 10px;
+            }
+
+            hr.solid {
+                border-top: 2px solid #999;
+            }
+
+            #header {
+                border-top: 6px solid #999;
+            }
+
+            #coll-opts {
+                color: white !important;
+            }
+
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+        <div class="container">
+            <div class="p-3 mb-2 bg-dark text-white" id="table-header">
+                <div class="row">
+                    <div class="col-sm"></div>
+                    <div class="col-sm">
+                        <div class="d-flex justify-content-center">
+                            <h1><b>Recommendations</b></h1>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="d-flex justify-content-end">
+                            <a href="/rec/{{ request.user.id }}/info"><i class="fas fa-info-circle fa-2x" id="coll-opt"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid" id="header">
+            {% for publication in pub_list %}
+            <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                <div class="row">
+                    <div class="col">
+                        <a href="/search/node/?t=Publication&id={{ publication.paperID }}"><h3><i class="fa fa-book"></i> <b>{{ publication.title }} - {{ publication.year }}</b></h3></a>
+                        <h4><i class="fa fa-user"></i> {{ publication.authorNames }}</h4>
+                    </div>
+                    <div class="col-md-auto">
+                            <a href = "/collection/{{ request.user.id }}/{{ publication.paperID }}/add"><i class="fas fa-plus fa-2x" id="coll-opt"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid">
+            {% endfor %}
+        </div>
+        {% endblock %}
+    </body>

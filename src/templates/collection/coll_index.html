@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        {{coll.name}}
+    {% endblock %}
+    {% block content_head %}
+        <style>
+
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #table-header {
+                background-color: #15202b !important;
+            }
+
+            #search-results {
+                background-color: #14202b !important;
+            }
+
+            a {
+                color: white !important;
+                fontsize: 10px;
+            }
+
+            hr.solid {
+                border-top: 2px solid #999;
+            }
+
+            #header {
+                border-top: 6px solid #999;
+            }
+
+            #coll-opts {
+                color: white !important;
+            }
+
+            #coll-drop {
+                background-color: #15202b !important;
+                box-shadow: 0 10px 10px #000000;
+            }
+
+            #coll-drop > a:hover {
+                background-color: #0d131a !important;
+            }
+
+            #coll-drop > a {
+                font-size: 25px !important;
+                text-align: center !important;
+            }
+
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+        <div class="container">
+            <div class="p-3 mb-2 bg-dark text-white" id="table-header">
+                <div class="row">
+                    <div class="col-sm"></div>
+                    <div class="col-sm">
+                        <div class="d-flex justify-content-center">
+                            <h1><b>{{coll.name}}</b></h1>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="d-flex justify-content-end">
+                            <div class="dropdown open">
+                                <button role="button" type="button" class="btn dropdown" data-toggle="dropdown" id="coll-opts"> 
+                                    <i class="fa fa-bars fa-clickable fa-2x" id="faClick"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" id="coll-drop">
+                                    <a class="dropdown-item" href="/vis/{{ request.user.id }}/{{ coll.id }}">Visualize</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/rec/{{ request.user.id }}/{{ coll.id }}">Collection Recommendations</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/rec/{{ request.user.id }}/{{ coll.id }}/info">Recommendation Info</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid" id="header">
+            {% for item in items %}
+            <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                <div class="row">
+                    <div class="col">
+                        <a href="/search/node/?t=Publication&id={{ item.publication.paperID }}"><h3><i class="fa fa-book"></i> <b>{{ item.publication.title }} - {{ item.publication.year }}</b></h3></a>
+                        <h4><i class="fa fa-user"></i> {{ item.publication.authorNames }}</h4>
+                    </div>
+                    <div class="col-md-auto">
+                            <a href = "/collection/{{ request.user.id }}/{{ coll.id }}/{{ item.publication.paperID }}/remove"><i class="fas fa-trash fa-2x" id="coll-opt"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid">
+        {% endfor %}
+    </div>
+    {% endblock %}
+    </body>

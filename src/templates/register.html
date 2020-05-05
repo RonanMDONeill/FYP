@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        PaperMill | Register
+    {% endblock %}
+    {% block content_head %}
+        <style>
+
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #register-box {
+                margin-top: 10%;
+                width: 20%;
+            }
+            .btn {
+                background-color: #0d131a !important;
+                border-color: #666 !important;
+            }
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+            <div class="container p-3 mb-2 bg-dark text-white" id="register-box">
+                <form method="POST">
+                    <div class="form-row align-items-center">
+                        <div class="col-auto">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-lg btn-success" type="submit">Register!</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endblock %}
+    </body>
+</html>

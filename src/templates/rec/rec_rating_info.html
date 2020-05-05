@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        Recommendation Info
+    {% endblock %}
+    {% block content_head %}
+        <style>
+
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #table-header {
+                background-color: #15202b !important;
+            }
+
+            #search-results {
+                background-color: #14202b !important;
+            }
+
+            a {
+                color: white !important;
+                fontsize: 10px;
+            }
+
+            hr.solid {
+                border-top: 2px solid #999;
+            }
+
+            #header {
+                border-top: 6px solid #999;
+            }
+
+            #coll-opts {
+                color: white !important;
+            }
+
+            #coll-drop {
+                background-color: #15202b !important;
+                box-shadow: 0 10px 10px #000000;
+            }
+
+            #coll-drop > a:hover {
+                background-color: #0d131a !important;
+            }
+
+            #coll-drop > a {
+                font-size: 25px !important;
+                text-align: center !important;
+            }
+
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+        <div class="container">
+            <div class="p-3 mb-2 bg-dark text-white" id="table-header">
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            <h1><b>Recommendation Information</b></h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            <h2>In the interest of reducing confirmation bias and the risk of filter bubbles, PaperMill provides its users with information on how their recommendations are being generated. PaperMill generates recommendations based the papers you have previously liked. Below is as list of these papers:</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid" id="header">
+            {% for pub in pub_list %}
+            <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                <div class="row">
+                    <div class="col">
+                        <a href="/search/node/?t=Publication&id={{ pub.paperID }}"><h3><i class="fa fa-book"></i> <b>{{ pub.title }} - {{ pub.year }}</b></h3></a>
+                        <h4><i class="fa fa-user"></i> {{ pub.authorNames }}</h4>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid">
+        {% endfor %}
+    </div>
+    {% endblock %}
+    </body>

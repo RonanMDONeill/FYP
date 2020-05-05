@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        PaperMill | Create Collection
+    {% endblock %}
+    {% block content_head %}
+        <style>
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #table {
+                margin-top: 10%;
+                background-color: #15202b !important;
+            }
+
+            .button-divider{
+                width:5px;
+                height:auto;
+                display:inline-block;
+            }
+
+            .btn {
+                background-color: #0d131a !important;
+                border-color: #666 !important;
+            }
+
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+            <div class="container p-3 mb-2 bg-dark text-white" id="table">
+                <form name="create-form" method="POST" action="/collection/create/" class="form-group">
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="d-flex justify-content-center">
+                                <h1>Create New Collection</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="d-flex justify-content-center">
+                                {% csrf_token %}
+                                {{form.name}}
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-lg btn-success" name="save" type="submit">Create</button>
+                                <div class="button-divider"></div>
+                                <button class="btn btn-lg btn-success" onclick="goBack()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <script>
+                function goBack() {
+                    window.history.back()
+                }
+            </script>
+        {% endblock %}
+    </body>

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        PaperMill | Remove
+    {% endblock %}
+    {% block content_head %}
+        <style>
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #table-header {
+                margin-top: 0.5%;
+            }
+
+            #delete-form {
+                width: 20%;
+            }
+
+            #delete-text {
+                text-align: center;
+            }
+
+            #table {
+                margin-top: 10%;
+                background-color: #15202b !important;
+            }
+
+            .button-divider{
+                width:5px;
+                height:auto;
+                display:inline-block;
+            }
+
+            .btn {
+                background-color: #0d131a !important;
+                border-color: #666 !important;
+            }
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+        <div class="container p-3 mb-2 bg-dark text-white" id="table">
+            <div class="row">
+                <h1 id="delete-text">Are you sure you want to remove '<b>{{ pub.title }}</b>' from this collection?</h1>
+            </div>
+            <br>
+            <div class="row">
+                <form class="container" id="delete-form">
+                    <button class="btn btn-lg btn-success" type="button" onclick="window.location.href = '/collection/{{ user.id }}/{{ coll.id }}/{{ pub.paperID }}/removed';">Remove</button>
+                    <button class="btn btn-lg btn-danger" type="button" onclick="goBack()">Cancel</button>
+                </form>
+            </div>
+        </div>
+        <script>
+            function goBack() {
+                window.history.back()
+            }
+        </script>
+        {% endblock %}
+    </body>

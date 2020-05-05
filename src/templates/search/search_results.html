@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        PaperMill
+    {% endblock %}
+    {% block content_head %}
+        <style>
+
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #table-header {
+                background-color: #15202b !important;
+            }
+
+            #search-results {
+                background-color: #14202b !important;
+            }
+
+            a {
+                color: white !important;
+                fontsize: 10px;
+            }
+
+            hr.solid {
+                border-top: 2px solid #999;
+            }
+
+            #header {
+                border-top: 6px solid #999;
+            }
+
+            #coll-opts {
+                color: white !important;
+            }
+            
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+            {% for result in results.data %}
+                {% if results.node_type == "Publication" %}
+                <div class="container">
+                    <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                        <div class="row">
+                            <div class="col">
+                                    <a href="/search/node/?t=Publication&id={{ result.node_properties.pubID }}"><h3><i class="fa fa-book"></i> <b>{{ result.node_properties.title}} - {{ result.node_properties.year }}</b></h3></a>
+                                    <h4><i class="fa fa-user"></i>
+                                        {% for name in result.node_properties.authorNames %}
+                                            {{ name }}{% if name != result.node_properties.authorNames|last %},{% endif %}
+                                        {% endfor %}
+                                    </h4>
+                                    {% if result.node_properties.doi != None %}
+                                        <h4><a href="https://www.doi.org/{{ result.node_properties.doi}}" target="_blank"><i class="fas fa-file-pdf"></i> External Link</a></h4>
+                                    {% endif %}
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="d-flex justify-content-end">
+                                    <a href="/collection/{{ results.user }}/{{ result.node_properties.pubID }}/add"><i class="fas fa-plus fa-2x" id="coll-opt"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="solid">
+                </div>
+                {% elif results.node_type == "Author" %}
+                <div class="container">
+                    <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                        <div class="row">
+                            <div class="col">
+                                <a href="/search/nodes/?q={{ result.node_properties.authorName }}&pp=authorNames&t=Publication"><h3><i class="fas fa-user"></i> <b>{{ result.node_properties.authorName}}</b></h3></a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="solid">
+                </div>
+                {% elif results.node_type == "Venue" %}
+                <div class="container">
+                    <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                        <div class="row">
+                            <div class="col">
+                                <a href="/search/nodes/?q={{ result.node_properties.venueName }}&pp=venueName&t=Publication"><h3><i class="fas fa-city"></i> <b>{{ result.node_properties.venueName}}</b></h3></a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="solid">
+                </div>
+                {% elif results.node_type == "Publisher" %}
+                <div class="container">
+                    <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                        <div class="row">
+                            <div class="col">
+                                <a href="/search/nodes/?q={{ result.node_properties.publisher }}&pp=publisher&t=Publication"><h3><i class="fas fa-scroll"></i> <b>{{ result.node_properties.publisher}}</b></h3></a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="solid">
+                </div>
+                {% elif results.node_type == "FoS" %}
+                <div class="container">
+                    <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                        <div class="row">
+                            <div class="col">
+                                <a href="/search/nodes/?q={{ result.node_properties.fosName }}&pp=fosNames&t=Publication"><h3><i class="fas fa-search"></i> <b>{{ result.node_properties.fosName}}</b></h3></a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="solid">
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endblock %}
+    </body>

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        PaperMill
+    {% endblock %}
+    {% block content_head %}
+        <style>
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #search-results {
+                background-color: #14202b !important;
+            }
+
+            hr.solid {
+                border-top: 2px solid #999;
+            }
+
+            a {
+                color: white !important;
+            }
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+            {% for result in results.data %}
+                <div class="container">
+                    <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                        <div class="row">
+                            <div class="col">
+                                <a href="/rec/venue/{{ result.node_properties.fosName }}"><h3><i class="fas fa-search"></i> <b>{{ result.node_properties.fosName}}</b></h3></a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="solid">
+                </div>
+            {% endfor %}
+        {% endblock %}
+    </body>

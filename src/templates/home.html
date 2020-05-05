@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+	{% load static %}
+	{% block content_title %}
+		PaperMill
+	{% endblock %}
+	{% block content_head %}
+		<style>
+			body, html {
+				height: 100%;
+				margin: 0;
+				font-family: Corbel;
+			}
+
+			h1 {
+				font-size: 10em !important;
+				color: white !important;
+				text-align: center !important;
+			}
+
+			h2 {
+				color: white !important;
+				text-align: center !important;
+			}
+
+			.btn {
+                background-color: #0d131a !important;
+                border-color: #666 !important;
+                position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				padding: 15px 25px;
+				text-align: center;
+				font-size: 18px;
+				cursor: pointer;
+				border-radius: 8px;
+            }
+
+		</style>
+	{% endblock %}
+	<body>
+		{% block content_body %}
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col"><br>
+					<h1><i class="fa fa-book fa-clickable" id="faClick"></i> <b>PaperMill</b></h1>
+					<h2>A visual interface for managing research paper collections</h2><br>
+				</div>
+			</div><br>
+			<div class="row">
+				<div class="col">
+					{% if request.user.is_authenticated %}
+						<button class="btn btn-lg btn-success" onclick="location.href='/collection/{{ request.user.id }}'">Get Started</button>
+					{% else %}
+		        		<button class="btn btn-lg btn-success" onclick="location.href='/accounts/login/'" class="button">Get Started</button>
+		      		{% endif %}
+		      	</div>
+		      </div>
+		  </div>
+	{% endblock %}
+	</body>

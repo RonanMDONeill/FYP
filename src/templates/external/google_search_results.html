@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        PaperMill
+    {% endblock %}
+    {% block content_head %}
+        <style>
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #search-results {
+                background-color: #14202b !important;
+            }
+
+            a {
+                color: white !important;
+            }
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+            {% if nodeType == "Author" %}
+            <div class="container">
+                <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                <h1>{{ result.name }}</h1>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex justify-content-end">
+                                {% if result.url_picture %}
+                                <img src="{{ result.url_picture }}" alt="Author Picture"></img>
+                                {% else %}
+                                <i class="fa fa-user"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.affiliation %}
+                                    <h2><i>Affiliation</i>: {{ result.affiliation }}</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.interests %}
+                                    <h2><i>Interests</i>:<ul>
+                                    {% for interest in result.interests %}
+                                        <li>{{ interest }}</li>
+                                    {% endfor %}</ul></h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if mostCited %}
+                                    <h2><i>Most cited publication</i>: <a href="{{mostCited.bib.url }}" target="_blank" >{{ mostCited.bib.title }}</a></h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.publications %}
+                                    <h2><i>No. of publications</i>: {{ result.publications|length }}</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.coauthors %}
+                                    <h2><i>No. of co-authors</i>: {{ result.coauthors|length }}</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.citedby %}
+                                    <h2><i>Cited by</i>: {{ result.citedby }}</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.citedby5y %}
+                                    <h2><i>Cited by (last 5 years)</i>: {{ result.citedby5y }}</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.hindex %}
+                                    <h2><i>h-Index</i>: {{ result.hindex }}</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.hindex5y %}
+                                    <h2><i>h-Index (last 5 years)</i>: {{ result.hindex5y }}</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.i10index %}
+                                    <h2><i>i10-Index</i>: {{ result.i10index }}</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.i10index5y %}
+                                    <h2><i>i10-Index (last 5 years)</i>: {{ result.i10index5y }}</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-start">
+                                {% if result.id %}
+                                    <br><h2><a href="https://scholar.google.com/citations?user={{ result.id }}&hl=en&oi=ao" target="_blank"><i class="fab fa-google"></i> View on Google Scholar</a></h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elif nodeType == "Publication" %}
+            <div class="container">
+                <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                    <div class="row">
+                        <div class="col">
+                            <h1>{{ result.bib.title }}</h1>
+                            {% if result.bib.author %}
+                                <h2><i>Authors</i>: {{ result.bib.author }}</h2>
+                            {% endif %}
+                            {% if result.citedby %}
+                                <h2><i>Cited by</i>: {{ result.citedby }}</h2>
+                            {% endif %}
+                            {% if result.bib.abstract %}
+                                <h2><i>Abstract</i>: </h2>
+                                <h2>{{ result.bib.abstract }}</h2>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elif nodeType == "Bad query" %}
+            <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                <div class="row">
+                    <div class="col-8">
+                        <h1>{{ result }}</h1>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endblock %}
+    </body>
