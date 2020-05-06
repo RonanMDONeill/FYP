@@ -21,6 +21,7 @@ class Publication(models.Model):
 	doi = models.URLField(null=True, blank=True)
 	venueName = models.CharField(max_length=120, null=True, blank=True)
 	publisher = models.CharField(max_length=120, null=True, blank=True)
+	n_citaion = models.CharField(max_length=50, null=True, blank=True)
 
 class Author(models.Model):
 	authorID = models.IntegerField()
