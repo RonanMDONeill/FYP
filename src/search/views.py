@@ -43,18 +43,29 @@ class GetNodesData(APIView):
             'page': int(request.GET.get('p', 1)),
         }
         nodes = fetch_nodes(fetch_info)
+        node_list = []
+
+        for node in nodes:
+            node_list.append(node["node_properties"])
+
+        node_list = sorted(node_list, key = lambda i: int(i["n_citation"]), reverse=True)
+
+
         user = request.user.id
         data = {
             'response': {
                 'status': '200',
                 'user': user,
                 'rows': len(nodes),
-                'data': nodes,
+                'data': node_list,
                 'search': fetch_info['search'],
                 'node_type': fetch_info['node_type'],
                 'pub_property': fetch_info['pub_property']
             },
         }
+
+         
+        print(len(node_list))
 
         return Response({'results': data['response']})
 
