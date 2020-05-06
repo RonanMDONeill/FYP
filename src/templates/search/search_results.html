@@ -46,19 +46,18 @@
                     <div class="p-3 mb-2 bg-dark text-white" id="search-results">
                         <div class="row">
                             <div class="col">
-                                    <a href="/search/node/?t=Publication&id={{ result.node_properties.pubID }}"><h3><i class="fa fa-book"></i> <b>{{ result.node_properties.title}} - {{ result.node_properties.year }}</b></h3></a>
+                                    <a href="/search/node/?t=Publication&id={{ result.pubID }}"><h3><i class="fa fa-book"></i> <b>{{ result.title}} - {{ result.year }}</b></h3></a>
                                     <h4><i class="fa fa-user"></i>
-                                        {% for name in result.node_properties.authorNames %}
-                                            {{ name }}{% if name != result.node_properties.authorNames|last %},{% endif %}
+                                        {% for name in result.authorNames %}
+                                            {{ name }}{% if name != result.authorNames|last %},{% endif %}
                                         {% endfor %}
                                     </h4>
-                                    {% if result.node_properties.doi != None %}
-                                        <h4><a href="https://www.doi.org/{{ result.node_properties.doi}}" target="_blank"><i class="fas fa-file-pdf"></i> External Link</a></h4>
-                                    {% endif %}
+                                    <h4><i class="fas fa-quote-left fa-sm"></i> n_citation: {{ result.n_citation }}
+                                    {% if result.doi != None %}<a href="https://www.doi.org/{{ result.doi}}" target="_blank" style="margin-left: 15px;"><i class="fas fa-file-pdf"></i> External Link</a>{% endif %}</h4>
                             </div>
                             <div class="col-md-auto">
                                 <div class="d-flex justify-content-end">
-                                    <a href="/collection/{{ results.user }}/{{ result.node_properties.pubID }}/add"><i class="fas fa-plus fa-2x" id="coll-opt"></i></a>
+                                    <a href="/collection/{{ results.user }}/{{ result.pubID }}/add"><i class="fas fa-plus fa-2x" id="coll-opt"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -70,7 +69,7 @@
                     <div class="p-3 mb-2 bg-dark text-white" id="search-results">
                         <div class="row">
                             <div class="col">
-                                <a href="/search/nodes/?q={{ result.node_properties.authorName }}&pp=authorNames&t=Publication"><h3><i class="fas fa-user"></i> <b>{{ result.node_properties.authorName}}</b></h3></a>
+                                <a href="/search/nodes/?q={{ result.authorName }}&pp=authorNames&t=Publication"><h3><i class="fas fa-user"></i> <b>{{ result.authorName}}</b></h3></a>
                             </div>
                         </div>
                     </div>
@@ -81,7 +80,7 @@
                     <div class="p-3 mb-2 bg-dark text-white" id="search-results">
                         <div class="row">
                             <div class="col">
-                                <a href="/search/nodes/?q={{ result.node_properties.venueName }}&pp=venueName&t=Publication"><h3><i class="fas fa-city"></i> <b>{{ result.node_properties.venueName}}</b></h3></a>
+                                <a href="/search/nodes/?q={{ result.venueName }}&pp=venueName&t=Publication"><h3><i class="fas fa-city"></i> <b>{{ result.venueName}}</b></h3></a>
                             </div>
                         </div>
                     </div>
@@ -92,7 +91,7 @@
                     <div class="p-3 mb-2 bg-dark text-white" id="search-results">
                         <div class="row">
                             <div class="col">
-                                <a href="/search/nodes/?q={{ result.node_properties.publisher }}&pp=publisher&t=Publication"><h3><i class="fas fa-scroll"></i> <b>{{ result.node_properties.publisher}}</b></h3></a>
+                                <a href="/search/nodes/?q={{ result.publisher }}&pp=publisher&t=Publication"><h3><i class="fas fa-scroll"></i> <b>{{ result.publisher}}</b></h3></a>
                             </div>
                         </div>
                     </div>
@@ -103,7 +102,7 @@
                     <div class="p-3 mb-2 bg-dark text-white" id="search-results">
                         <div class="row">
                             <div class="col">
-                                <a href="/search/nodes/?q={{ result.node_properties.fosName }}&pp=fosNames&t=Publication"><h3><i class="fas fa-search"></i> <b>{{ result.node_properties.fosName}}</b></h3></a>
+                                <a href="/search/nodes/?q={{ result.fosName }}&pp=fosNames&t=Publication"><h3><i class="fas fa-search"></i> <b>{{ result.fosName}}</b></h3></a>
                             </div>
                         </div>
                     </div>
