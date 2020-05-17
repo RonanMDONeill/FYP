@@ -6,35 +6,44 @@ from .models import Collection, Publication, ItemList, Author, PubRating
 from .forms import CreateNewColl
 from search.utils import fetch_node_details
 
-# Create your views here.
+# Define the views for the Collection app
 
 def colllist_view(response, userID):
+	# Return all the collections for a user
 	user = User.objects.get(id=userID)
 	colls = Collection.objects.filter(user=user)
 	return render(response, "collection/coll.html", {"colls": colls})
 
 def addtocoll_view(response, userID, nodeID):
+	# Return all collections to a user
 	user = User.objects.get(id=userID)
 	colls = Collection.objects.filter(user=user)
 
+	# If the Publication is not in the SQLite database, add it
 	if Publication.objects.filter(paperID=nodeID).exists() == False:
 		create_pub(nodeID)
 
 	return render(response, "collection/add_to_coll.html", {"colls": colls, "nodeID": nodeID})
 
 def addedtocoll_view(response, userID, collID, nodeID):
+	# Link user, collection, and publication
 	user = User.objects.get(id=userID)
 	coll = Collection.objects.get(id=collID)
 	pub = Publication.objects.get(paperID=nodeID)
 
-	addedItem = ItemList(collection=coll, publication=pub)
-	addedItem.save()
+	# Check if Publication is already in the collection, if not add it
+	if ItemList.objects.filter(collection=coll, publication=pub).exists() == False:
+		addedItem = ItemList(collection=coll, publication=pub)
+		addedItem.save()
 
-	print("Created new ItemList")
+		print("Created new ItemList")
+	
+	# Return ItemList and collection
 	items = ItemList.objects.filter(collection=coll)
 	return render(response, "collection/coll_index.html", {"coll": coll, "items": items})
 
 def removefromcoll_view(response, userID, collID, nodeID):
+	# Allow a user to remove a publication from a collection
 	user = User.objects.get(id=userID)
 	coll = Collection.objects.get(id=collID)
 	pub = Publication.objects.get(paperID=nodeID)
@@ -42,9 +51,11 @@ def removefromcoll_view(response, userID, collID, nodeID):
 	return render(response, "collection/remove.html", {"user": user, "coll": coll, "pub": pub})
 
 def removedfromcoll_view(response, userID, collID, nodeID):
+	# Remove the selected publication from collection
 	coll = Collection.objects.get(id=collID)
 	pub = Publication.objects.get(paperID=nodeID)
 
+	# Delete connection
 	addedItem = ItemList.objects.get(collection=coll, publication=pub)
 	addedItem.delete()
 
@@ -54,6 +65,7 @@ def removedfromcoll_view(response, userID, collID, nodeID):
 
 
 def collcreate_view(response):
+	# Return Collection creation form
 	if response.method == "POST":
 		form = CreateNewColl(response.POST)
 		if form.is_valid():
@@ -73,18 +85,21 @@ def collcreate_view(response):
 	return render(response, "collection/coll_create.html", {"form": form})
 
 def coll_view(response, userID, id):
+	# Return user's collections
 	coll = Collection.objects.get(id=id)
 	items = ItemList.objects.filter(collection=coll)
 	user = userID
 	return render(response, "collection/coll_index.html", {"user": user, "coll": coll, "items": items})
 
 def deletecoll_view(response, userID, collID):
+	# Allow a user to delete a collection
 	user = User.objects.get(id=userID)
 	coll = Collection.objects.get(id=collID)
 
 	return render(response, "collection/delete.html", {"user": user, "coll": coll})
 
 def deletedcoll_view(response, userID, collID):
+	# Delete selected collection
 	coll = Collection.objects.get(id=collID)
 
 	ItemList.objects.filter(collection=coll).delete()
@@ -97,6 +112,7 @@ def deletedcoll_view(response, userID, collID):
 	return redirect(redirectURL)
 
 def ratepub_view(request, userID, nodeID, rating):
+	# Update rating for a publication
 	pub = Publication.objects.get(paperID=nodeID)
 	if request.method == "POST" and request.is_ajax():
 		if PubRating.objects.filter(publication=pub, user=request.user).exists() == False:
@@ -114,8 +130,8 @@ def ratepub_view(request, userID, nodeID, rating):
 	else:
 		return JsonResponse({"status": "Failed"})
 
-# Function to create publication model
 def create_pub(nodeID):
+	# Retrieve selected node details from Neo4j and add to SQLite database
 	node_info = {
 		'node_type': "Publication",
 		'node_id': nodeID,
@@ -127,6 +143,7 @@ def create_pub(nodeID):
 	print("Creating new publication: ", paperID)
 
 	title = node_details["node_properties"]["title"]
+	n_citation = int(float(node_details["node_properties"]["n_citation"]))
 
 
 	authorNames = ""
@@ -163,7 +180,7 @@ def create_pub(nodeID):
 	venueName = node_details["node_properties"]["venueName"]
 	publisher = node_details["node_properties"]["publisher"]
 
-	pub = Publication(paperID=paperID, title=title, authorNames=authorNames, authorIDs= authorIDs,year=year, fos=fos, references=references, doi=doi, venueName=venueName, publisher=publisher)
+	pub = Publication(paperID=paperID, title=title, authorNames=authorNames, authorIDs= authorIDs,year=year, fos=fos, references=references, doi=doi, venueName=venueName, publisher=publisher, n_citation=n_citation)
 	pub.save()
 
 	for authID in node_details["node_properties"]["authorIDs"]:

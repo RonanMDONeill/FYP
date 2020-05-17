@@ -12,6 +12,7 @@ from .views import (
 	ratepub_view
 )
 
+# Define the URL paths for the Collection app
 urlpatterns = [
     path('<int:userID>/', colllist_view, name='collection_list'),
     path('create/', collcreate_view, name='collection_create'),
