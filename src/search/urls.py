@@ -1,5 +1,4 @@
 from django.urls import include, path
-from pages.views import search_view
 from .views import (
     GetNodesCount,
     GetNodesData,
@@ -7,8 +6,8 @@ from .views import (
     GetFoSNodesData
 )
 
+# Define the URL paths for the Collection app
 urlpatterns = [
-	path('', search_view, name='search'),
     path('count/', GetNodesCount.as_view(), name='get_nodes_count'),
     path('nodes/', GetNodesData.as_view(), name='get_nodes_data'),
     path('node/', GetNodeData.as_view(), name='get_node_data'),
