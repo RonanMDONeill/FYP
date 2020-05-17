@@ -92,7 +92,7 @@
 								    <option value="FoS">Field of Study</option>
 								</select>
 							</div>
-							<div class="col">
+							<!--<div class="col">
 								<select class="form-control form-control-sm" id="prop-type">
 									<option value="title">Title</option>
 								    <option value="authorNames">Author</option>
@@ -101,7 +101,7 @@
 								    <option value="fosNames">Field of Study</option>
 								    <option value="year">Year</option>
 								</select>
-							</div>
+							</div>-->
 							<div class="col">
 								<input class="form-control" type="text" id="searchBox" name="nodes" placeholder="Search query..." onkeypress="enter_query(event)">
 							</div>
@@ -130,7 +130,7 @@
 			</ul>
 		</nav>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script>
+		<!--<script>
 		  	// Function to hide/show the table based on the values of inputs
 		  	function toggleTable() {
 		  		// Hides the table if the values of both input are same
@@ -141,7 +141,7 @@
 		  		// Bind the keyup event on both the inputs, call the function on event
 				$('#search-type').on('click', toggleTable).trigger('click');
 			});
-		</script>
+		</script>-->
 		<script>
 		  	function enter_query(event) {
 		  		if(event.keyCode == 13) {
@@ -153,8 +153,6 @@
 		<script>
 	      function get_results(){
 
-	        console.log("get_results");
-
 	        var query = document.getElementById("searchBox");
 
 	        var node_type = document.getElementById("search-type");
@@ -163,7 +161,7 @@
 	          var prop_type = document.getElementById("prop-type");
 
 
-	          var search = "/search/nodes/?q="+query.value+"&pp="+prop_type.value+"&t="+node_type.value;
+	          var search = "/search/nodes/?q="+query.value+"&pp=title&t="+node_type.value;
 	        }
 
 	        else {
