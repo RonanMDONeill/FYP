@@ -5,8 +5,13 @@ from django.core.files.storage import default_storage
 from django.conf import settings
 import json, re
 
-# Create your views here.
+# Define the views for the vis app
+
 def vis_view(response, userID, collID):
+	# View for collection visualizations
+	# This is not pretty, but it works...
+
+	# Get collection and ItemList
 	coll = Collection.objects.filter(id=collID)
 	items = ItemList.objects.filter(collection__in=coll)
 
@@ -31,7 +36,7 @@ def vis_view(response, userID, collID):
 	toEdgeP_list = ""
 	fromEdgeP_list = ""
 
-	# Author node-edge lists
+	# Co-Author node-edge lists
 	nodeA_list = ""
 	nodeAID_list = ""
 	nodeAColour_list = ""
@@ -57,6 +62,7 @@ def vis_view(response, userID, collID):
 	recPaper_checklist = []
 	recPaperDict_checklist = []
 
+	# Lists using for checking throughout
 	paper_checklist = []
 	author_checklist = []
 	coAuthor_checklist = []
@@ -83,8 +89,10 @@ def vis_view(response, userID, collID):
 			"publisher": item.publication.publisher,
 		}
 
+		# Add paper to list
 		paper_list.append(paper)
 
+		# Get each reference of each paper
 		for ref in paper["references"].split(","):
 			refDict = {
 				"paperID": str(paper["paperID"]),
@@ -97,6 +105,7 @@ def vis_view(response, userID, collID):
 		node =  paper["title"]
 		nodeID = str(paperID)
 
+		# Add to necessarym lists, * is used in JavaScript to tokenize the string
 		nodePA_list += node + "*"
 		nodePAID_list += nodeID + "*"
 		nodePAColour_list += "#00bfff*"
@@ -112,11 +121,13 @@ def vis_view(response, userID, collID):
 		nodeCColour_list += "#00bfff*"
 		nodeCShape_list += "box*"
 
+		# Get each author for each paper
 		for ID in item.publication.authorIDs.split(","):
 			# Collect author details
 			cleanID = ID.lstrip()
 			count += 1
 
+			# If author has not already been come across
 			if cleanID not in author_checklist:
 				auth = Author.objects.get(authorID=cleanID)
 
@@ -161,6 +172,7 @@ def vis_view(response, userID, collID):
 
 		count += 1
 
+	# Create Reference connections
 	for paperID in paperID_list:
 		for refDict in refDict_list:
 			if refDict["ref"] == str(paperID):
@@ -178,9 +190,11 @@ def vis_view(response, userID, collID):
 
 				toEdgeP_list += toEdge + "*"
 
+	# Create Co-Author connections
 	for author in author_list:
 		for coAuthor in author["coAuthors"].split(","):
 			coAuthorID = coAuthor.lstrip()
+			# If the Co-Author is in the collection
 			if coAuthorID in author_checklist:
 
 				checkDict = {
@@ -203,6 +217,7 @@ def vis_view(response, userID, collID):
 					coAuthorDict_checklist.append(coAuthorCheck)
 
 			else:
+				# If haven't come across Co-Author yet
 				if coAuthorID not in coAuthor_checklist:
 					fetch_info = {
 						'node_type': "Author",
@@ -213,6 +228,9 @@ def vis_view(response, userID, collID):
 					}
 
 					node = fetch_nodes(fetch_info)
+
+					if node == []:
+						break
 
 					coAuthorName = str(node).split("authorName': ")[1].split(",")[0]
 					coAuthorName = coAuthorName[1:-1]
@@ -246,6 +264,7 @@ def vis_view(response, userID, collID):
 					toEdge = str(coAuthorID)
 					toEdgeA_list += toEdge + "*"
 
+	# Get references outside of collection
 	for paper in paper_list:
 		for ref in str(paper["references"]).split(","):
 			refID = ref.lstrip()
@@ -372,8 +391,6 @@ def vis_view(response, userID, collID):
 		"nodeCID_list": nodeCID_list, "nodeCColour_list": nodeCColour_list, "nodeCShape_list": nodeCShape_list, "fromEdgeC_list": fromEdgeC_list, 
 		"toEdgeC_list": toEdgeC_list, "recAuthor_list": recAuthor_list, "recPaper_list": recPaper_list})
 
-def paper_detail_clean(detail):
-	detail = detail[2:-2]
-	detail_list = detail.split("', '")
+def vis_info_view(response):
 
-	return detail_list
+	return render(response, "vis/info.html", {})
