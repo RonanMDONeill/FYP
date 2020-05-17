@@ -6,8 +6,12 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
-# Create your views here.
+# Define the views for the Collection app
+
 def register_view(request, *args, **kwargs):
+    # Allow a user to register
+
+    # Use Django's inbuilt AuthenticationForm to register a user
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -22,6 +26,9 @@ def register_view(request, *args, **kwargs):
     return render(request, 'register.html', {'form': form})
 
 def login_view(request, *args, **kwargs):
+    # Allow a user to logim
+
+    # Use Django's inbuilt login to register a user
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
@@ -39,14 +46,9 @@ def login_view(request, *args, **kwargs):
     form = AuthenticationForm()
     return render(request, "login.html", {"form":form})
 
+# Views to return the home page
 def home_view(request, *args, **kwargs):
 	return render(request, "home.html", {})
 
 def main_view(request, *args, **kwargs):
 	return redirect('/home')
-
-def search_view(request, *args, **kwargs):
-	return render(request, "search.html", {})
-
-def vis_view(request, *args, **kwargs):
-	return render(request, "vis.html", {})
