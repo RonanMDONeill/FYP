@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block content_title %}
+        Visualization Info
+    {% endblock %}
+    {% block content_head %}
+        <style>
+
+            body {
+                margin: 0;
+                font-family: Corbel;
+            }
+
+            #table-header {
+                background-color: #15202b !important;
+            }
+
+            #search-results {
+                background-color: #14202b !important;
+            }
+
+            a {
+                color: white !important;
+                fontsize: 10px;
+            }
+
+            hr.solid {
+                border-top: 2px solid #999;
+            }
+
+            #header {
+                border-top: 6px solid #999;
+            }
+
+            #coll-opts {
+                color: white !important;
+            }
+
+            #coll-drop {
+                background-color: #15202b !important;
+                box-shadow: 0 10px 10px #000000;
+            }
+
+            #coll-drop > a:hover {
+                background-color: #0d131a !important;
+            }
+
+            #coll-drop > a {
+                font-size: 25px !important;
+                text-align: center !important;
+            }
+
+        </style>
+    {% endblock %}
+    <body>
+        {% block content_body %}
+        <div class="container">
+            <div class="p-3 mb-2 bg-dark text-white" id="table-header">
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            <h1><b>Visualization Information</b></h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-center">
+                            <h2>PaperMill offers a range of visualizations based off of your selected collection. These visualizations are interactive, so you can move them around, zoom in and out, and highlight selected nodes. Once a node has been selected, you can find more information about it in a box to the left. Also to the left, you may also find a selection of publications and authors we think you may be interested in. These recommendations are generated from co-authors and shared references within your collection. The four types are visualizations are described below.</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="solid" id="header">
+            <div class="p-3 mb-2 bg-dark text-white" id="search-results">
+                <div class="row">
+                    <div class="col">
+                        <h2 style="text-align: center;"><b>Publication & Author</b></h2>
+                        <h3>The Publication & Author graph visualizes all the publications within your selected collection, as well as their authors. Two paper nodes will be connected if one publication references the other one, with the arrow pointing towards the publication that was referenced. Author nodes will be connected if the two authors are co-authors (i.e. have worked together on a publication).</h3>
+                        <h3><i> Please note: if two author have worked together but the publication they worked on is not in the selected colllection, a co-author link will not be generated for this visualization. Please use the Co-Author visualization for this.</i></h3>
+                    </div>
+                </div>
+                <hr class="solid">
+                <div class="row">
+                    <div class="col">
+                        <h2 style="text-align: center;"><b>Publication</b></h2>
+                        <h3>The Publication graph is a simplified version of the Publication & Author graph, containing only the publications featured within the collection.</h3>
+                    </div>
+                </div>
+                <hr class="solid">
+                <div class="row">
+                    <div class="col">
+                        <h2 style="text-align: center;"><b>Co-Authors</b></h2>
+                        <h3>The Co-Authors graph visualizes all the authors featured within the selected collection, as well as all of the authors they have previously worked with. Yellow nodes represent the authors featured within the collection, while red nodes represent the authors that these original authors have worked with, but who are not featured in the collection. Red nodes with more than edge - if present -are highlighted in a box on the left. These are authors which PaperMill believes you may be interseted in researching further.</h3>
+                    </div>
+                </div>
+                <hr class="solid">
+                <div class="row">
+                    <div class="col">
+                        <h2 style="text-align: center;"><b>References</b></h2>
+                        <h3>The References graph visualizes all the publications featured within the selected collection and their references. Blue nodes represent the publications featured within the collection, while orange nodes represent the publications that they reference, but are not in the collection. Orange nodes with more than edge - if present -are highlighted in a box on the left. These are publications which PaperMill believes you may be interseted in researching further.</h3>
+                    </div>
+                </div>
+            </div>
+    </div>
+    {% endblock %}
+    </body>

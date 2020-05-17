@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
     {% load static %}
-    {% load index %}
     {% block content_title %}
         Recommendation Information
     {% endblock %}
@@ -33,7 +32,7 @@
                     <div class="col">
                     	<h2>In the interest of reducing confirmation bias and the risk of filter bubbles, PaperMill provides its users with information on how their recommendations are being generated. PaperMill generates recommendations based on the textual content of the papers included in your collection.</h2><br>
                         <hr class="solid"><br>
-                        <h2>Below is as list of the prominent words being used to generate recommendations for this collection: </h2><br>
+                        <h2>Below is a list of the prominent word stems being used to generate recommendations for this collection: </h2><br>
                     	<h3>
                     		{% for word in text %}
                     			{{ word }}{% if word != text|last %},{% endif %}

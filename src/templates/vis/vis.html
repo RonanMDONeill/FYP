@@ -88,6 +88,14 @@
             h1 {
               color: white;
             }
+
+            h4 {
+              color: white;
+            }
+
+            i {
+              color: white;
+            }
         </style>   
     {% endblock %}
     <body>
@@ -96,11 +104,17 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-2" id="type-legend">
-          <br><select class="form-control" id="vis-type" onchange="updateGraph(this.value)">
+          <h4>Visualization Type</h4>
+          <select class="form-control" id="vis-type" onchange="updateGraph(this.value)">
             <option value="PA">Publication & Author</option>
             <option value="P">Publication</option>
             <option value="A">Co-Authors</option>
             <option value="C">References</option>
+          </select><br>
+          <h4>Order Type</h4>
+          <select class="form-control" id="sort-type" onchange="updateSort()">
+            <option value="S">Standard</option>
+            <option value="H">Hierarchical</option>
           </select><br>
           <div id="see-more" class="container">
             <h3><b id="node-type"></b></h3>
@@ -128,13 +142,16 @@
           <div id="vis"></div>
         </div>
         <div class="col-1">
-          <br><h1><b>Legend</b></h1>
+          <br><div class="d-flex justify-content-center">
+            <a href="/vis/info"><i class="fas fa-info-circle fa-3x" id="coll-opt"></i></a><br>
+          </div>
+          <br><br><br><h1><b>Legend</b></h1>
           <div id="legend"><img src="/static/images/legend.png" class="img-fluid" alt="legend"></div>
         </div>
       </div>
     </div>
     <script type="text/javascript">
-      function drawGraph(nodeList, nodeIDList, nodeColourList, nodeShapeList, fromEdgeList, toEdgeList) {
+      function drawGraph(nodeList, nodeIDList, nodeColourList, nodeShapeList, fromEdgeList, toEdgeList, sortType) {
 
         var x;
         var nodes;
@@ -166,18 +183,42 @@
           edges: edges
         };
 
-        var options = {
-            physics: {
-              enabled: true,
-              repulsion: {
-                centralGravity: 0,
-                springLength: 1000,
-                springConstant: 0.05,
-                nodeDistance: 100,
-                damping: 0.09
+        if (sortType == "H"){
+          var options = {
+              layout: {
+                hierarchical: {
+                  direction: "UD",
+                  sortMethod: "directed"
+                }
+              },
+              physics: {
+                enabled: false,
+                repulsion: {
+                  centralGravity: 0,
+                  springLength: 1000,
+                  springConstant: 0.05,
+                  nodeDistance: 100,
+                  damping: 0.09
+                }
               }
-            }
-          };
+            };
+          }
+
+        else {
+          var options = {
+              physics: {
+                enabled: true,
+                repulsion: {
+                  centralGravity: 0,
+                  springLength: 1000,
+                  springConstant: 0.05,
+                  nodeDistance: 100,
+                  damping: 0.09
+                }
+              }
+            };
+          }
+
         var network = new vis.Network(container, data, options);
         network.on( 'click', function(properties) {
           var ids = properties.nodes;
@@ -234,7 +275,9 @@
                 toEdgeList = "{{ toEdgeC_list | escapejs }}".split("*");
               }
 
-              drawGraph(nodeList, nodeIDList, nodeColourList, nodeShapeList, fromEdgeList, toEdgeList)
+              var sortType = document.getElementById("sort-type").value 
+
+              drawGraph(nodeList, nodeIDList, nodeColourList, nodeShapeList, fromEdgeList, toEdgeList, sortType)
           }
       </script>
       <script>
@@ -265,6 +308,12 @@
               document.getElementById("see-more-link").href=redirect;
             }
           }
+        }
+      </script>
+      <script>
+        function updateSort(){
+          var visType = document.getElementById("vis-type").value
+          updateGraph(visType)
         }
       </script>
   {% endblock %}

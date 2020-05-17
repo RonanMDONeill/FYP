@@ -69,7 +69,7 @@
                     <div class="p-3 mb-2 bg-dark text-white" id="search-results">
                         <div class="row">
                             <div class="col">
-                                <a href="/search/nodes/?q={{ result.authorName }}&pp=authorNames&t=Publication"><h3><i class="fas fa-user"></i> <b>{{ result.authorName}}</b></h3></a>
+                                <a href="/search/nodes/?q={{ result.node_properties.authorName }}&pp=authorNames&t=Publication"><h3><i class="fas fa-user"></i> <b>{{ result.node_properties.authorName}}</b></h3></a>
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                     <div class="p-3 mb-2 bg-dark text-white" id="search-results">
                         <div class="row">
                             <div class="col">
-                                <a href="/search/nodes/?q={{ result.venueName }}&pp=venueName&t=Publication"><h3><i class="fas fa-city"></i> <b>{{ result.venueName}}</b></h3></a>
+                                <a href="/search/nodes/?q={{ result.node_properties.venueName }}&pp=venueName&t=Publication"><h3><i class="fas fa-city"></i> <b>{{ result.node_properties.venueName}}</b></h3></a>
                             </div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                     <div class="p-3 mb-2 bg-dark text-white" id="search-results">
                         <div class="row">
                             <div class="col">
-                                <a href="/search/nodes/?q={{ result.publisher }}&pp=publisher&t=Publication"><h3><i class="fas fa-scroll"></i> <b>{{ result.publisher}}</b></h3></a>
+                                <a href="/search/nodes/?q={{ result.node_properties.publisher }}&pp=publisher&t=Publication"><h3><i class="fas fa-scroll"></i> <b>{{ result.node_properties.publisher}}</b></h3></a>
                             </div>
                         </div>
                     </div>
@@ -102,7 +102,7 @@
                     <div class="p-3 mb-2 bg-dark text-white" id="search-results">
                         <div class="row">
                             <div class="col">
-                                <a href="/search/nodes/?q={{ result.fosName }}&pp=fosNames&t=Publication"><h3><i class="fas fa-search"></i> <b>{{ result.fosName}}</b></h3></a>
+                                <a href="/search/nodes/?q={{ result.node_properties.fosName }}&pp=fosNames&t=Publication"><h3><i class="fas fa-search"></i> <b>{{ result.node_properties.fosName}}</b></h3></a>
                             </div>
                         </div>
                     </div>
