@@ -12,42 +12,49 @@ import os, nltk, smart_open
 import pandas as pd
 import numpy as np
 from nltk.tokenize import word_tokenize, sent_tokenize
-nltk.download("punkt")
 from gensim import corpora, models
 from gensim.utils import simple_preprocess
-from gensim.similarities import Similarity
+from gensim.similarities import Similarity, MatrixSimilarity
 from neomodel.exceptions import DoesNotExist
 from collections import Counter
 
+# Define the views for the Recommendation app
+
 def initiate_recommender():
+	# Retrieve all the necessary files for the recommender system
 	baseDir = settings.BASE_DIR
 
-	dictFile = baseDir + "\static\data\DBLP_Dictionary.dict"
-	corpusFile = baseDir + "\static\data\DBLP_Corpus.mm"
+	# Load dictionary and corpus
+	dictFile = baseDir + "/static/data/DBLP_Dictionary.dict"
+	corpusFile = baseDir + "/static/data/DBLP_Corpus.mm"
 
 	dictionary = corpora.Dictionary.load(dictFile)
 	corpus = corpora.MmCorpus(corpusFile)
 
 	# Load the TF-IDF model
-	tfidfFile = baseDir + "\static\data\TF-IDF"
+	tfidfFile = baseDir + "/static/data/TF-IDF"
 
 	tfidf = models.TfidfModel().load(tfidfFile)
 
 	# Load the Gensim similarity index
-	indexFile = r"D:/Users/Rónan/Documents/UCD/Stage 4/FYP/Dataset/Index"
+	indexFile = baseDir + "/static/data/Index"
 	sims = Similarity.load(indexFile)
 
+	# If matrix fits in memory, use this instead and comment out previous two lines
+	#sims = MatrixSimilarity(tfidf[corpus], num_features=(len(dictionary)))
+
 	# Point to the text csv file
-	textFile = baseDir + "\static\data\Text.csv"
+	textFile = baseDir + "/static/data/Text.csv"
 
 	# Load ID dataframe from recommender
-	paperIDs = baseDir + "\static\data\AbsID.csv"
+	paperIDs = baseDir + "/static/data/AbsID.csv"
 	cols = ["paperID"]
 	dfIDs = pd.read_csv(paperIDs, names=cols, header=None)
 
 	return dictionary, corpus, tfidf, sims, textFile, dfIDs
 
 def generate_recommendations(dictionary, corpus, tfidf, sims, queryText, dfIDs, recNum, paperID_list, indices):
+	# Generate recommendations based off the specified papers
 	query = [w for w in word_tokenize(queryText)]
 	queryBoW = dictionary.doc2bow(query)
 
@@ -88,6 +95,7 @@ def generate_recommendations(dictionary, corpus, tfidf, sims, queryText, dfIDs, 
 	return paperID_list
 
 def get_pubs(paperID_list):
+	# Get the publicaitons from the SQLite database, create if doesn't exist
 	pub_list = []
 	# Return RecPub, if it doesn't exist, create
 	for nodeID in paperID_list:
@@ -151,6 +159,8 @@ def get_pubs(paperID_list):
 	return pub_list
 
 def coll_rec_view(response, userID, collID):
+	# Generate collection recommendation
+
 	# Get the paperIDs within the collection
 	coll = Collection.objects.get(id=collID)
 	items = ItemList.objects.filter(collection=coll)
@@ -163,47 +173,55 @@ def coll_rec_view(response, userID, collID):
 
 	queryText = ""
 
+	# Get paper indices
 	for item in items:
 		index = dfIDs[dfIDs["paperID"]==item.publication.paperID].index.values[0]
 		index_list.append(index)
 
 	index_list.sort()
 
-	with open(textFile, encoding='utf-8') as f:
-		for i in range(index_list[-1]):
-			line = f.readline()
-			if i in index_list:
-				queryText += line + " "
+	# If at least one paper in collection
+	if len(index_list) > 0:	
+		# Get the text data for the corresponding text data
+		with open(textFile, encoding='utf-8') as f:
+			for i in range(index_list[-1]+1):
+				line = f.readline()
+				if i in index_list:
+					queryText += line + " "
 
-	paperID_list = generate_recommendations(dictionary, corpus, tfidf, sims, queryText, dfIDs, 10, paperID_list, index_list)
+		print("Index: " + str(index))
+		print("Index List: " + str(index_list))
 
-	# Clear variables from memory
-	dictionary = None
-	corpus = None
-	tfidf = None
-	sims = None
-	cols = None
-	dfIDs = None
-	baseDir = None
-	dictFile = None
-	corpusFile = None
-	tfidfFile = None
-	indexFile = None
-	textFile = None
-	paperIDs = None
+		# Generate recommendations
+		paperID_list = generate_recommendations(dictionary, corpus, tfidf, sims, queryText, dfIDs, 10, paperID_list, index_list)
 
-	pub_list = get_pubs(paperID_list)
+		# Clear variables from memory
+		dictionary = None
+		corpus = None
+		tfidf = None
+		sims = None
+		cols = None
+		dfIDs = None
+		baseDir = None
+		dictFile = None
+		corpusFile = None
+		tfidfFile = None
+		indexFile = None
+		textFile = None
+		paperIDs = None
+
+		pub_list = get_pubs(paperID_list)
 	
 	return render(response, "rec/coll_rec.html", {"pub_list": pub_list, "coll": coll})
 
 def rec_info_view(response, userID, collID):
+	# Show most prominent word stems used in collection recommendation
 	coll = Collection.objects.get(id=collID)
 	items = ItemList.objects.filter(collection=coll)
 
 	collText = " "
 	collText_dict = {}
 	collText_list = []
-	collTextUnique_list = []
 	index_list = []
 
 	baseDir = settings.BASE_DIR
@@ -214,47 +232,44 @@ def rec_info_view(response, userID, collID):
 
 	textFile = baseDir + "\static\data\Text.csv"
 
+	# Get paper indices
 	for item in items:
 		index = dfIDs[dfIDs["paperID"]==item.publication.paperID].index.values[0]
 		index_list.append(index)
 
 	index_list.sort()
 
-	with open(textFile, encoding='utf-8') as f:
-		for i in range(index_list[-1]):
-			line = f.readline()
-			if i in index_list:
-				collText += line
+	# If at least one paper in collection
+	if len(index_list) > 0:
+		with open(textFile, encoding='utf-8') as f:
+			for i in range(index_list[-1]+1):
+				line = f.readline()
+				if i in index_list:
+					collText += line
 
-	for word in collText.split(" "):
-		if word not in collText_dict:
-			collText_dict[word] = 1
-		else:
-			if collText_dict[word] == 1:
+		# Only get most common words
+		# Tokenize string
+		for word in collText.split(" "):
+			# If not come across word yet, add to dictionary
+			if word not in collText_dict:
+				collText_dict[word] = 1
+			# Else, increase its count
+			else:
+				collText_dict[word] += 1
+
+		# Only returned words that occur more than once and remove null
+		for word in collText_dict:
+			if collText_dict[word] > 1 and word != "":
 				collText_list.append(word)
 
-	for word in collText_list:
-		if word not in collTextUnique_list and word != "":
-			collTextUnique_list.append(word)
-
-
-	return render(response, "rec/rec_info.html", {"text": collTextUnique_list})
+	return render(response, "rec/rec_info.html", {"text": collText_list})
 
 def fos_search_view(response):
-	baseDir = settings.BASE_DIR
-
-	fosFile = baseDir + "\static\data\cleanFosName.csv"#
-
-	fosList = []
-
-	with open(fosFile, encoding='utf-8') as f:
-		for line in f:
-			fosList.append(line)
-
-	print(len(fosList))
-	return render(response, "rec/fos_search.html", {"fosNames": fosList})
+	# Allow a user to search for a fos name for the venue recommender
+	return render(response, "rec/fos_search.html", {})
 
 def rec_venue_view(response, fos):
+	# Generate venue recommendations
 	fetch_info = {
 		'node_type': "Publication",
 		'search': fos,
@@ -263,6 +278,7 @@ def rec_venue_view(response, fos):
 		'page': 1,
 	}
 
+	# Search forn all publications with specified fos
 	nodes = fetch_nodes(fetch_info)
 
 	venueList = []
@@ -271,6 +287,7 @@ def rec_venue_view(response, fos):
 		properties = node["node_properties"]
 		venueList.append(properties["venueName"])
 
+	# Get the most common word
 	mostCommonVenue = Counter(venueList).most_common(1)
 	venueTuple = mostCommonVenue[0]
 
@@ -280,18 +297,19 @@ def rec_venue_view(response, fos):
 	return render(response, "rec/rec_venue.html", {"venueName": venueName, "fosName": fos})
 
 def rec_rating_view(response, userID):
-
+	# Generate rating recommendation
 	ratedPubs = PubRating.objects.filter(user=userID)
 
 	ratedPub_list = []
+	pub_list = []
+	
+	# Only get papers rated 4 or higher
 	for ratedPub in ratedPubs:
 		if ratedPub.rating >= 4:
 			ratedPub_list.append(ratedPub.publication.paperID)
 
-	if not ratedPub_list:
-		pub_list = []
-
-	else:
+	# At least one paper rated
+	if len(ratedPub_list) > 0:
 		dictionary, corpus, tfidf, sims, textFile, dfIDs = initiate_recommender()
 
 		paperID_list = []
@@ -334,14 +352,14 @@ def rec_rating_view(response, userID):
 	return render(response, "rec/rating_rec.html", {"pub_list": pub_list})
 
 def rec_rating_info_view(response, userID):
+	# Rating recommendation information
 	ratedPubs = PubRating.objects.filter(user=userID)
 	pub_list = []
 
+	# Return rated papers
 	for pub in ratedPubs:
 		if pub.rating >= 4:
 			pub_list.append(pub.publication)
-
-	print(pub_list)
 
 	return render(response, "rec/rec_rating_info.html", {"pub_list": pub_list})
 

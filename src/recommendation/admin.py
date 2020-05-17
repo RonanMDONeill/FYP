@@ -1,5 +1,5 @@
 from django.contrib import admin
 from .models import RecPub
 
-# Register your models here.
+# Register the models for the Recommendation app
 admin.site.register(RecPub)

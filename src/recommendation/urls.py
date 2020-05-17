@@ -8,6 +8,7 @@ from .views import (
 	rec_rating_info_view
 )
 
+# Define the URL paths for the Recommendation app
 urlpatterns = [
     path('<int:userID>/<int:collID>/', coll_rec_view, name='collection recommendations'),
     path('<int:userID>/<int:collID>/info', rec_info_view, name='recommendation information'),
