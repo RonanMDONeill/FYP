@@ -26,12 +26,14 @@ PaperMill is a Django-based web app that connects to a Neo4j database. To setup 
 1. A virtual environment should be setup using the libraries listed in the requirements.txt file
 2. Install the latest version of Neo4j
 3. To begin the data preprocessing, download the DBLP_V11 dataset from [here](https://lfs.aminer.cn/misc/dblp.v11.zip).
-    1. If you wish to skip the preprocessing, the cleaned data can be downloaded from [here](https://drive.google.com/drive/folders/1tKbVttaWletlF1uTqj_dvNqc9cn2eNWl). If you chose to skip the preprocessing, move to step 5
+    1. If you wish to skip the preprocessing, the cleaned data can be downloaded from [here](https://drive.google.com/drive/folders/1tKbVttaWletlF1uTqj_dvNqc9cn2eNWl)
 4. Run the RUNME.ipynb from the virtual environment
-    1. If your system has sufficient memory free to hold the similarity matrix (>4GB):
+    2. If your system has sufficient memory free to hold the similarity matrix (>4GB):
     <br>- In the "Generating Recommender System Framework" section of RUNME.ipynb, set createSimMatrix to False
     <br>- In "src/recommendation/views.py", uncomment line 44
     <br>- In "src/recommendation/views.py", comment line 41
+     2. If you downloaded the cleaned data, you only need to run the "Generating Recommender System Framework" section:
+    <br>- Set dictExists, corpusExists, and tfidfExists to True
 5. Start a new Neo4j project. The following instructions are for Neo4j Desktop:
     1. Start a new project.
     2. Click "Add Database
