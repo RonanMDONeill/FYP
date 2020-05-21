@@ -14,9 +14,9 @@ def replace_special_char(oldString):
 
     return oldString.replace("\"", "'")
 
-def listify_string(oldString):
+def wrap_string(oldString):
     """"
-    Wraps strings that are lists with " for Neo4j
+    Wraps strings with " for Neo4j
     
     oldString (string): String for wrapping
     """
@@ -69,27 +69,27 @@ def split_dataset(file, numRows, splits, output, badIDs):
                 print("Bad ID caught: " + paperID + ".")
                 continue
 
-            paperID = listify_string(paperID)
+            paperID = wrap_string(paperID)
             
             title = replace_special_char(str(jsonLine["title"]))
             titleText = title
-            title = listify_string(title)
+            title = wrap_string(title)
             
             year = ""
             try:
-                year = str(jsonLine["year"])
+                year = wrap_string(str(jsonLine["year"]))
             except KeyError:
                 pass
             
             publisher = ""
             try:
-                publisher = listify_string(replace_special_char(str(jsonLine["publisher"])))
+                publisher = wrap_string(replace_special_char(str(jsonLine["publisher"])))
             except KeyError:
                 pass
             
             doi = ""
             try:
-                doi = listify_string(replace_special_char(str(jsonLine["doi"])))
+                doi = wrap_string(replace_special_char(str(jsonLine["doi"])))
             except KeyError:
                 pass
             
@@ -100,45 +100,31 @@ def split_dataset(file, numRows, splits, output, badIDs):
                     if index > 0:
                         references += ","
                     references += str(ref)
-                references = listify_string(references)
+                references = wrap_string(references)
             except KeyError:
                 pass
                 
             authorsName = ""
             authorsID = ""
-            authorsOrg = ""
             try:
                 for index, auth in enumerate(jsonLine["authors"]):
-                    if auth["org"]:
-                        if index > 0:
-                            authorsName += ","
-                            authorsID += ","
-                            authorsOrg += ","
-                        authorsName += str(auth["name"])
-                        authorsID += str(auth["id"])
-                        authorsOrg += str(auth["org"])
-                    
-                    else:
-                        if index > 0:
-                            authorsName += ","
-                            authorsID += ","
-                        authorsName += str(auth["name"])
-                        authorsID += str(auth["id"])
-                authorsName = replace_special_char(authorsName)
-                authorsOrg = replace_special_char(authorsOrg)
+                    if index > 0:
+                        authorsName += ","
+                        authorsID += ","
+                    authorsName += str(auth["name"])
+                    authorsID += str(auth["id"])
                 
-                authorsName = listify_string(authorsName)
-                authorsOrg = listify_string(authorsOrg)
-                authorsID = listify_string(authorsID)
+                authorsName = wrap_string(replace_special_char(authorsName))
+                authorsID = wrap_string(authorsID)
             except KeyError:
                 pass
             
             venueName = ""
             venueID = ""
             try:
-                venueName = listify_string(replace_special_char(str(jsonLine["venue"]["raw"])))
+                venueName = wrap_string(replace_special_char(str(jsonLine["venue"]["raw"])))
                 if jsonLine["venue"]["id"]:
-                    venueID = listify_string(str(jsonLine["venue"]["id"]))
+                    venueID = wrap_string(str(jsonLine["venue"]["id"]))
             except KeyError:
                 pass
             
@@ -154,14 +140,14 @@ def split_dataset(file, numRows, splits, output, badIDs):
                     fosWeight += str(fos["w"])
                 fosName = replace_special_char(fosName)
                 fosNameText = fosName
-                fosName = listify_string(fosName)
-                fosWeight = listify_string(fosWeight)
+                fosName = wrap_string(fosName)
+                fosWeight = wrap_string(fosWeight)
             except KeyError:
                 pass
             
             n_citation = ""
             try:
-                n_citation = str(jsonLine["n_citation"])
+                n_citation = wrap_string(str(jsonLine["n_citation"]))
             except KeyError:
                 pass
             
@@ -177,7 +163,7 @@ def split_dataset(file, numRows, splits, output, badIDs):
 
             textDict = {
                 "paperID": paperID,
-                "title": titleText,
+                "title": title,
                 "fosNames": fosNameText,
                 "abstract": abstract
             }
@@ -216,4 +202,4 @@ def split_dataset(file, numRows, splits, output, badIDs):
 
     print(str(datetime.datetime.now()) + ": Split " + str(fileNo) + " complete.")
     
-    print(str(datetime.datetime.now()) + ": Datset split.")
+    print(str(datetime.datetime.now()) + ": Dataset split.")
