@@ -1,5 +1,5 @@
 # COMP30910 - FYP Design and Implementation
 Final year Computer Science with Data Science project.
 
-# PaperMill: A Visual Interface for Managing Research Paper Collections
+## PaperMill: A Visual Interface for Managing Research Paper Collections
 An essential aspect of the writing process of a literature review is building a collection of relevant papers regarding the topic at hand. This allows a researcher to develop a keen and broad understanding of past work and analysis undertaken. There are many tools available that visualize relationships between academic papers based on properties including citations, authors, and references. However, what these tools lack is the ability to find individual papers within these visualizations, or a recommender system based on a previously established collection.  Using a specially curated dataset containing over four million academic papers, this project will develop a tool that will not only visualize the relationships between publications but will also help users find papers relevant to their search, thanks to an in-built recommender system. The aim of this tool is to expedite the writing process of a literature review, by shortening the time a researcher spends searching for pertinent papers.
