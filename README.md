@@ -33,7 +33,7 @@ PaperMill is a Django-based web app that connects to a Neo4j database. To setup 
     <br>- In "src/recommendation/views.py", uncomment line 44
     <br>- In "src/recommendation/views.py", comment line 41
      2. If you downloaded the cleaned data, you only need to run the "Generating Recommender System Framework" section:
-    <br>- Set dictExists, corpusExists, and tfidfExists to True
+    <br>- Set dictExists, corpusExists, and tfidfExists to True (make sure to but the downloaded files in the correct directories i.e. the ones listed in the notebook)
 5. Start a new Neo4j project. The following instructions are for Neo4j Desktop:
     1. Start a new project.
     2. Click "Add Database
