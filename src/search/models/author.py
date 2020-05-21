@@ -1,3 +1,8 @@
+"""
+Model based on Paradise Paper Search App’s Django + Neomodel Tutorial
+See: https://neo4j-examples.github.io/paradise-papers-django/
+"""
+
 from .nodeutils import NodeUtils
 from neomodel import (
 	StringProperty,
@@ -9,12 +14,14 @@ from neomodel import (
 )
 
 class Author(StructuredNode, NodeUtils):
+	# Author properties and relationships
 	authorID = StringProperty(index=True)
 	authorName = StringProperty()
 	coAuthors = ArrayProperty()
 	publication = RelationshipFrom('.publication.Publication', 'AUTHORED_BY')
 	coAuthorRel = RelationshipTo('.author.Author', 'CO_AUTHOR')
 
+	# Properites of relationshi
 	@property
 	def serialize(self):
 		return {
@@ -25,6 +32,7 @@ class Author(StructuredNode, NodeUtils):
 			},
 		}
 
+	# Relationships of Author node
 	@property
 	def serialize_connections(self):
 		return [

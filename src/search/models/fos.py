@@ -1,3 +1,8 @@
+"""
+Model based on Paradise Paper Search App’s Django + Neomodel Tutorial
+See: https://neo4j-examples.github.io/paradise-papers-django/
+"""
+
 from .nodeutils import NodeUtils
 from neomodel import (
     StringProperty,
@@ -8,6 +13,7 @@ from neomodel import (
 )
 
 class FoS(StructuredNode):
+    # Field of study properties and relationships
     fosName = StringProperty(index=True)
     publication = RelationshipFrom('.publication.Publication', 'IN_FIELD')
 

@@ -1,3 +1,8 @@
+"""
+Model based on Paradise Paper Search App’s Django + Neomodel Tutorial
+See: https://neo4j-examples.github.io/paradise-papers-django/
+"""
+
 from abc import ABCMeta
 from neomodel import db
 
@@ -8,7 +13,7 @@ class NodeUtils:
     def serialize_relationships(self, nodes):
         serialized_nodes = []
         for node in nodes:
-            # serialize node
+            # Serialize node
             serialized_node = node.serialize
 
             results, colums = self.cypher('''

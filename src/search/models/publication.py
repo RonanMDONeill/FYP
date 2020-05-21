@@ -1,3 +1,8 @@
+"""
+Model based on Paradise Paper Search App’s Django + Neomodel Tutorial
+See: https://neo4j-examples.github.io/paradise-papers-django/
+"""
+
 import re
 from .nodeutils import NodeUtils
 from neomodel import (
@@ -10,9 +15,11 @@ from neomodel import (
 )
 
 class Publication(StructuredNode, NodeUtils):
+	# Publication properties and relationships
 	venueName = StringProperty()
 	references = ArrayProperty()
 	year = StringProperty()
+	n_citation = StringProperty()
 	venueID = StringProperty()
 	fosWeights = ArrayProperty()
 	authorNames = ArrayProperty()
@@ -45,6 +52,7 @@ class Publication(StructuredNode, NodeUtils):
 				'authorIDs': self.authorIDs,
 				'fosNames': self.fosNames,
 				'doi': self.doi,
+				'n_citation': self.n_citation
 			},
 		}
 
