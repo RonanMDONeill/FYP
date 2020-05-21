@@ -7,7 +7,7 @@ CREATE CONSTRAINT ON (pl:Publisher) ASSERT pl.publisher IS UNIQUE;
 CREATE INDEX ON :Publication(title)
 
 // 2. Load Publications
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 MERGE (p:Publication {pubID: dblp.id})
 SET p.title = dblp.title,
@@ -24,7 +24,7 @@ p.references = (split(dblp.references, ",")),
 p.n_citation = dblp.n_citation
 
 // 3. Create relationship between publications if one references the other
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 WITH dblp
 WHERE NOT dblp.references IS NULL
@@ -34,7 +34,7 @@ MATCH (p1:Publication {pubID: publicationID}), (p2:Publication {pubID: ref})
 CREATE (p1)-[:REFERENCES]->(p2)
 
 // 4. Load Authors
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 WITH dblp
 WHERE NOT dblp.authorsID IS NULL
@@ -45,7 +45,7 @@ FOREACH (x IN i |
 )
 
 // 5. Create relationship between Author and Publication
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 WITH dblp
 WHERE NOT dblp.authorsID IS NULL
@@ -55,7 +55,7 @@ MATCH (p:Publication {pubID: publicationID}), (a:Author {authorID: authID})
 CREATE (p)-[:AUTHORED_BY]->(a)
 
 // 6. Create relationship between Co-Authors
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 WITH dblp
 WHERE NOT dblp.authorsID IS NULL
@@ -65,7 +65,7 @@ WHERE a1.authorID = id[0] AND a2.authorID IN tail(id) AND NOT EXISTS((a1)-[:CO_A
 CREATE (a1)-[:CO_AUTHOR]->(a2)
 
 // 7. Load FOS
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 WITH split(dblp.fosName, ",") AS fos
 FOREACH (field IN fos | 
@@ -73,7 +73,7 @@ FOREACH (field IN fos |
 )
 
 // 8. Create relationship between Publication and FOS
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp WITH split(dblp.fosName, ",") AS fosNames, dblp.id AS publicationID
 UNWIND fosNames AS fosName
 MATCH (p:Publication {pubID: publicationID}), (f:FoS {fosName: fosName})
@@ -81,7 +81,7 @@ WHERE toString(f.fosName) IN p.fosNames
 CREATE (p)-[:IN_FIELD]->(f)
 
 // 9. Load Venue
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 WITH dblp
 WHERE NOT dblp.venueName IS NULL
@@ -89,7 +89,7 @@ MERGE(v:Venue {venueName: dblp.venueName})
 ON CREATE SET v.venueID = dblp.venueID
 
 // 10. Create relationship between Publication and Venue
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 WITH dblp
 WHERE NOT dblp.venueName IS NULL
@@ -97,14 +97,14 @@ MATCH (p:Publication {pubID: dblp.id}), (v:Venue {venueName: dblp.venueName})
 CREATE (p)-[:PUBLISHED_AT]->(v)
 
 // 11. Load Publisher
-USING PERIODIC COMMIT 100000
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 WITH dblp
 WHERE NOT dblp.publisher IS NULL
 MERGE(pl:Publisher {publisher: dblp.publisher})
 
 // 12. Create Relationship between Publication and Publisher
-USING PERIODIC COMMIT
+:auto USING PERIODIC COMMIT 50000
 LOAD CSV WITH HEADERS FROM "file:///DBLP_RD.csv" AS dblp
 WITH dblp
 WHERE NOT dblp.publisher IS NULL
