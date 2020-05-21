@@ -21,3 +21,7 @@ The main objective of this project is to build a visualization tool that shows t
 * Connect to existing platforms such as Google Scholar, ResearchGate etc. to ingest a researcher's paper collections.
 * A completed, well designed controlled user trial that evaluates the usefulness of the tool.
 
+## How to Run
+PaperMill is a Django-based web app that connects to a Neo4j database. To setup the project, follow the list of instructions below: <br>
+1. A virtual environment should be setup using the libraries listed in the requirements.txt file
+2. Install he latest version of Neo4j
