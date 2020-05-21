@@ -27,4 +27,4 @@ PaperMill is a Django-based web app that connects to a Neo4j database. To setup 
 2. Install he latest version of Neo4j
 3. To begin the data preprocessing, download the DBLP_V11 dataset from [here](https://lfs.aminer.cn/misc/dblp.v11.zip). If you wish to skip the preprocessing, the cleaned data can be downloaded from [here](https://drive.google.com/drive/folders/1tKbVttaWletlF1uTqj_dvNqc9cn2eNWl). If you chose to skip the preprocessing, move to step 
 4. Run the RUNME.ipynb from the virtual environment
-  1. If your system has sufficient memory free to hold the similarity matrix (>4GB):
+    1. If your system has sufficient memory free to hold the similarity matrix (>4GB):
