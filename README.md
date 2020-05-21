@@ -32,4 +32,6 @@ PaperMill is a Django-based web app that connects to a Neo4j database. To setup 
     <br>- In "src/recommendation/views.py", uncomment line 44
     <br>- In "src/recommendation/views.py", comment line 41
 5. In command line/Powershell/Terminal, activate the virtual environment and move to the "src" directory
-6. In the command line, create a Django admin user `<addr>`
+6. In the command line, create a Django admin user: `python manage.py createsuperuser`
+7. Initiate the SQLite database: `python manage.py makemigrations` followed by `python manage.py migrate`
+8. Run the app: `python manage.py runserver`
