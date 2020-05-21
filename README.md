@@ -31,7 +31,19 @@ PaperMill is a Django-based web app that connects to a Neo4j database. To setup 
     <br>- In the "Generating Recommender System Framework" section of RUNME.ipynb, set createSimMatrix to False
     <br>- In "src/recommendation/views.py", uncomment line 44
     <br>- In "src/recommendation/views.py", comment line 41
-5. In command line/Powershell/Terminal, activate the virtual environment and move to the "src" directory
-6. In the command line, create a Django admin user: `python manage.py createsuperuser`
-7. Initiate the SQLite database: `python manage.py makemigrations` followed by `python manage.py migrate`
-8. Run the app: `python manage.py runserver`
+5. Start a new Neo4j project. The following instructions are for Neo4j Desktop:
+        1. Start a new project.
+        2. Click "Add Database
+        3. Click "Create a Local Graph"
+        4. Name the graph whatever you like
+        2. For password, use: PMVG123
+        3. Click "Create"
+        4. When the database is created, click the three dots and then "Manage"
+        5. Click the "Settings" tab
+        6. Overwrite the config here with the contents of the neo4j_conf.txt file
+        7. Start the database
+        8. Import the "neo4j" data, using the Cypher queries listed in the cypher_queries.txt file
+6. In command line/Powershell/Terminal, activate the virtual environment and move to the "src" directory
+7. In the command line, create a Django admin user: `python manage.py createsuperuser`
+8. Initiate the SQLite database: `python manage.py makemigrations` followed by `python manage.py migrate`
+9. Run the app: `python manage.py runserver`
