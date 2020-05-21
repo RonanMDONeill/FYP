@@ -59,6 +59,7 @@ class GetNodesData(APIView):
             try:
                 # If publication nodes, sort by n_citation
                 for node in nodes:
+                    print(node["node_properties"]["title"] + node["node_properties"]["n_citation"])
                     # N_citation and year conversion (w/o this some appear as floats in results)
                     node["node_properties"]["n_citation"] = int(float(node["node_properties"]["n_citation"]))
                     node["node_properties"]["year"] = int(float(node["node_properties"]["year"]))
