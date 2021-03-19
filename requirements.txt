@@ -16,7 +16,7 @@ django-braces==1.14.0
 django-haystack==3.0b1
 django-model-utils==4.0.0
 django-neomodel==0.0.4
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 docutils==0.15.2
 future==0.18.2
 gensim==3.8.1
